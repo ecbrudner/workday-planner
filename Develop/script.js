@@ -54,12 +54,11 @@ $(function () {
       agendaTextArea.className = 'present';
     }
 
-
     var saveButton = document.createElement('button');
     saveButton.className= 'btn saveBtn col-2 col-md-1';
     saveButton.setAttribute('aria-label', 'save');
-    // saveButton.addEventListener('click',saveText);
-    //use the event listener to traverse the DOM to the savetext child: button->parent->child
+    saveButton.addEventListener('click',saveText);
+    
 
     var saveIcon= document.createElement('i');
     saveIcon.className='fas fa-save';
@@ -75,7 +74,10 @@ $(function () {
 
 
   function saveText(event){
-  }
+    var timeBlockId= event.target.closest('.time-block').id;
+    var textAreaValue= event.target.closest('.time-block').querySelector('.description').value;
+    localStorage.setItem(timeBlockId, textAreaValue);
+   }
 
 
 });

@@ -1,6 +1,3 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
 $(function () {
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
@@ -9,66 +6,78 @@ $(function () {
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
   //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
-  //
-  // Code below displays current date in header
-setInterval(()=>
-  {
+  var container= document.querySelector('.container-fluid.px-5');
+
+  setInterval(()=> {
     var now= dayjs().format('MMMM D, YYYY h:mm A');
     document.getElementById('currentDay').textContent=now;
-  
   }, 1000);
 
-var timeBlocks= [
-  { id:'hour-9', label: '9AM'},
-  { id:'hour-10',label: '10AM'},
-  { id:'hour-11',label: '11AM'},
-  { id:'hour-12',label: '12PM'},
-  { id:'hour-1', label: '1PM'},
-  { id:'hour-2', label: '2PM'},
-  { id:'hour-3', label: '3PM'},
-  { id:'hour-4', label: '4PM'},
-  { id:'hour-5', label: '5PM'}
-];
+  var timeBlocks= [
+    { id:'9-hour', label: '9AM'},
+    { id:'10-hour',label: '10AM'},
+    { id:'11-hour',label: '11AM'},
+    { id:'12-hour',label: '12PM'},
+    { id:'13-hour', label: '1PM'},
+    { id:'14-hour', label: '2PM'},
+    { id:'15-hour', label: '3PM'},
+    { id:'16-hour', label: '4PM'},
+    { id:'17-hour', label: '5PM'}
+  ];
 
-var container= document.querySelector('.container-fluid px-5');
+  var currentHour= dayjs().hour();
 
-function createTimeBlock (){
-  var timeBlockDiv= document.createElement('div');
-  timeBlockDiv.id= timeBlocks.id;
-  timeBlockDiv.className= 'row time-block';
+  for (var i=0; i < timeBlocks.length; i++){
+    createTimeBlock(timeBlocks[i]);
+  }
 
-  var hourDiv= document.createElement('div');
-  hourDiv.className='col-2 col-md-1 hour text-center py-3';
-  hourDiv.textContent= timeBlocks.label;
+  function createTimeBlock (timeBlocks){
+    var timeBlockDiv= document.createElement('div');
+    timeBlockDiv.id= timeBlocks.id;
+    timeBlockDiv.className= 'row time-block';
 
-  var agendaTextArea= document.createElement('textarea');
-  agendaTextArea.className= 'col-8 col-md-10 description';
-  agendaTextArea.rows='3';
+    var hourDiv= document.createElement('div');
+    hourDiv.className='col-2 col-md-1 hour text-center py-3';
+    hourDiv.textContent= timeBlocks.label;
 
-  var saveButton = document.createElement('button');
-  saveButton.className= 'btn saveBtn col-2 col-md-1';
-  saveButton.setAttribute('aria-label', 'save');
+    var agendaTextArea= document.createElement('textarea');
+    agendaTextArea.className= 'col-8 col-md-10 description';
+    agendaTextArea.rows='3';
+    if (parseInt(timeBlocks.id) < currentHour){
+      agendaTextArea.className = 'past';
+    } else if (parseInt(timeBlocks.id) > currentHour){
+      agendaTextArea.className = 'future';
+    } else {
+      agendaTextArea.className = 'present';
+    }
 
-  var saveIcon= document.createElement('i');
-  saveIcon.className='fas fa-save';
-  saveIcon.setAttribute('aria-hidden', 'true');
 
-  saveButton.appendChild(saveIcon);
-  timeBlockDiv.appendChild(hourDiv);
-  timeBlockDiv.appendChild(agendaTextArea);
-  timeBlockDiv.appendChild(saveButton);
+    var saveButton = document.createElement('button');
+    saveButton.className= 'btn saveBtn col-2 col-md-1';
+    saveButton.setAttribute('aria-label', 'save');
+    // saveButton.addEventListener('click',saveText);
+    //use the event listener to traverse the DOM to the savetext child: button->parent->child
 
-  container.appendChild(timeBlockDiv);
-}
+    var saveIcon= document.createElement('i');
+    saveIcon.className='fas fa-save';
+    saveIcon.setAttribute('aria-hidden', 'true');
 
-createTimeBlock();
+    saveButton.appendChild(saveIcon);
+    timeBlockDiv.appendChild(hourDiv);
+    timeBlockDiv.appendChild(agendaTextArea);
+    timeBlockDiv.appendChild(saveButton);
+
+    container.appendChild(timeBlockDiv);
+  }
+
+
+  function saveText(event){
+  }
+
+
 });
+
+//use a unique identifier to select the text area from a specific time block, using identifier as the key for local storage

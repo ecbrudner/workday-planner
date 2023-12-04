@@ -74,11 +74,13 @@ $(function () {
 
 
   function saveText(event){
-    var timeBlockId= event.target.closest('.time-block').id;
-    var textAreaValue= event.target.closest('.time-block').querySelector('.description').value;
+    var timeBlockId= event.target.parentElement.id;
+    var textAreaValue= event.target.parentElement.querySelector('.description');
     localStorage.setItem(timeBlockId, textAreaValue);
    }
 
+   
+   console.log(localStorage);
 
 });
 

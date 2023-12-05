@@ -11,6 +11,7 @@ $(function () {
   // attribute of each time-block be used to do this?
   var container= document.querySelector('.container-fluid.px-5');
 
+
   setInterval(()=> {
     var now= dayjs().format('MMMM D, YYYY h:mm A');
     document.getElementById('currentDay').textContent=now;
@@ -46,6 +47,7 @@ $(function () {
     var agendaTextArea= document.createElement('textarea');
     agendaTextArea.className= 'col-8 col-md-10 description';
     agendaTextArea.rows='3';
+    agendaTextArea.id= 'agenda'+[i];
     if (parseInt(timeBlocks.id) < currentHour){
       agendaTextArea.className = 'past';
     } else if (parseInt(timeBlocks.id) > currentHour){
@@ -58,8 +60,17 @@ $(function () {
     saveButton.className= 'btn saveBtn col-2 col-md-1';
     saveButton.setAttribute('aria-label', 'save');
     saveButton.addEventListener('click',saveText);
-    
 
+    var textAreaValue;
+    var timeBlockId;
+
+    function saveText(event){
+      timeBlockId= this.parentElement.id;
+      textAreaValue= $(this.parentElement).find('.description').val();
+      localStorage.setItem(timeBlockId, JSON.stringify(textAreaValue));
+      agendaTextArea.value= JSON.parse(localStorage.getItem(timeBlockId));
+    }
+    
     var saveIcon= document.createElement('i');
     saveIcon.className='fas fa-save';
     saveIcon.setAttribute('aria-hidden', 'true');
@@ -72,16 +83,7 @@ $(function () {
     container.appendChild(timeBlockDiv);
   }
 
-
-  function saveText(event){
-    var timeBlockId= event.target.parentElement.id;
-    var textAreaValue= event.target.parentElement.querySelector('.description');
-    localStorage.setItem(timeBlockId, textAreaValue);
-   }
-
-   
-   console.log(localStorage);
+  
 
 });
 
-//use a unique identifier to select the text area from a specific time block, using identifier as the key for local storage

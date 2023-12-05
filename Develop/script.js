@@ -47,7 +47,7 @@ $(function () {
     var agendaTextArea= document.createElement('textarea');
     agendaTextArea.className= 'col-8 col-md-10 description';
     agendaTextArea.rows='3';
-    agendaTextArea.id= 'agenda'+[i];
+    agendaTextArea.id= 'agenda'+ timeBlocks.id;
     if (parseInt(timeBlocks.id) < currentHour){
       agendaTextArea.className = 'past';
     } else if (parseInt(timeBlocks.id) > currentHour){
@@ -68,8 +68,9 @@ $(function () {
       timeBlockId= this.parentElement.id;
       textAreaValue= $(this.parentElement).find('.description').val();
       localStorage.setItem(timeBlockId, JSON.stringify(textAreaValue));
-      agendaTextArea.value= JSON.parse(localStorage.getItem(timeBlockId));
     }
+
+    agendaTextArea.value= localStorage.getItem(timeBlocks.id);
     
     var saveIcon= document.createElement('i');
     saveIcon.className='fas fa-save';

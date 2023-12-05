@@ -83,7 +83,5 @@ $(function () {
     container.appendChild(timeBlockDiv);
   }
 
-  
-
 });
 
